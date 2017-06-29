@@ -28,14 +28,17 @@ protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    asyncTask = new DogAsyncTask();
-    asyncTask.cancelOnActivityDestroyed(this);
+    asyncTask = new DogAsyncTask(this);
     asyncTask.execute();
 }
 
 ---
 
 private class DogAsyncTask extends ZAsync<Dog> {
+
+    public DogAsyncTask(Activity activity) {
+        super(activity);
+    }
 
     @Override
     public void onPreExecute() {
