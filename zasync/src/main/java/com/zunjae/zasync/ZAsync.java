@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -28,8 +29,8 @@ public abstract class ZAsync<Result> {
     @Nullable
     private Application application;
 
-    public void cancelOnActivityDestroyed(Application application, final Activity calledFromActivity) {
-        this.application = application;
+    public void cancelOnActivityDestroyed(@NonNull final Activity calledFromActivity) {
+        this.application = calledFromActivity.getApplication();
         activityCallBackListener = new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -69,7 +70,9 @@ public abstract class ZAsync<Result> {
                 }
             }
         };
-        application.registerActivityLifecycleCallbacks(activityCallBackListener);
+        if (application != null) {
+            application.registerActivityLifecycleCallbacks(activityCallBackListener);
+        }
     }
 
     /**

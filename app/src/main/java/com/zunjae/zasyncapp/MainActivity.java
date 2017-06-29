@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         helloWorld = (TextView) findViewById(R.id.helloWorld);
 
         DogAsyncTask asyncTask = new DogAsyncTask();
-        asyncTask.cancelOnActivityDestroyed(getApplication(), this);
+        asyncTask.cancelOnActivityDestroyed(this);
         asyncTask.execute();
     }
 
@@ -29,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected boolean hasCache() {
-            return true;
+            return DogRepository.hasDogSaved();
         }
 
         @Override
         protected Dog returnCache() {
-            return new Dog("zunjae", 4);
+            return DogRepository.getDogFromRepo();
         }
 
         @Override
