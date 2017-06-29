@@ -20,7 +20,7 @@ dependencies {
 }
 ```
 
-#Usage:
+# Usage:
 
 ```java
 @Override
@@ -68,7 +68,10 @@ private class DogAsyncTask extends ZAsync<Dog> {
 
 ```
 
+# Note
 
+* Adding a constructor calling the superclass is required
+* No need to cancel the ZAsync from the onDestroy method. This now happens for you
 
 
 # License
