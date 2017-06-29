@@ -29,7 +29,16 @@ public abstract class ZAsync<Result> {
     @Nullable
     private Application application;
 
-    public void cancelOnActivityDestroyed(@NonNull final Activity calledFromActivity) {
+    public ZAsync(Activity activity) {
+        cancelOnActivityDestroyed(activity);
+    }
+
+    /**
+     * Cancel this AsyncTask whenever the activity is destroyed
+     *
+     * @param calledFromActivity the Activity from where the ZAsync is called
+     */
+    private void cancelOnActivityDestroyed(@NonNull final Activity calledFromActivity) {
         this.application = calledFromActivity.getApplication();
         activityCallBackListener = new Application.ActivityLifecycleCallbacks() {
             @Override

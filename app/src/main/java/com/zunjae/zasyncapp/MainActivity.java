@@ -1,5 +1,6 @@
 package com.zunjae.zasyncapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +20,16 @@ public class MainActivity extends AppCompatActivity {
 
         helloWorld = (TextView) findViewById(R.id.helloWorld);
 
-        DogAsyncTask asyncTask = new DogAsyncTask();
-        asyncTask.cancelOnActivityDestroyed(this);
+        DogAsyncTask asyncTask = new DogAsyncTask(this);
         asyncTask.execute();
     }
 
     private class DogAsyncTask extends ZAsync<Dog> {
         private final String TAG = "DogAsyncTask";
+
+        public DogAsyncTask(Activity activity) {
+            super(activity);
+        }
 
         @Override
         protected boolean hasCache() {
