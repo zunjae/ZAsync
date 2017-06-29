@@ -29,6 +29,11 @@ public abstract class ZAsync<Result> {
     @Nullable
     private Application application;
 
+    /**
+     * Skip loading form disk (returnCache()) and straight up use doInBackground()
+     */
+    private boolean forceSkipCache = false;
+
     public ZAsync(Activity activity) {
         cancelOnActivityDestroyed(activity);
     }
@@ -112,6 +117,9 @@ public abstract class ZAsync<Result> {
         return null;
     }
 
+    protected void onCancelled() {
+    }
+
     /**
      * Connect to the internet to load new data.
      */
@@ -119,6 +127,7 @@ public abstract class ZAsync<Result> {
 
     public void cancel() {
         this.cancelled = true;
+        onCancelled();
         // unregister onDestroy listener
         if (application != null) {
             application.unregisterActivityLifecycleCallbacks(activityCallBackListener);
@@ -141,7 +150,9 @@ public abstract class ZAsync<Result> {
             @Override
             public void run() {
                 final Result result;
-                if (hasCache()) {
+                if (forceSkipCache) {
+                    result = doInBackground();
+                } else if (hasCache()) {
                     result = returnCache();
                 } else {
                     result = doInBackground();
@@ -184,5 +195,9 @@ public abstract class ZAsync<Result> {
 
     public boolean isCancelled() {
         return cancelled;
+    }
+
+    public void setForceSkipCache(boolean forceSkipCache) {
+        this.forceSkipCache = forceSkipCache;
     }
 }

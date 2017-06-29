@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         helloWorld = (TextView) findViewById(R.id.helloWorld);
 
         DogAsyncTask asyncTask = new DogAsyncTask(this);
+        asyncTask.setForceSkipCache(true);
         asyncTask.execute();
     }
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Dog returnCache() {
+            Log.i(TAG, "Returning data from Cache");
             return DogRepository.getDogFromRepo();
         }
 
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Dog doInBackground() {
+            Log.i(TAG, "Returning data from cloud");
             return DogRepository.getMockDogFromCloud();
         }
 
