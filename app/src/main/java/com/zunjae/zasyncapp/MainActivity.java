@@ -28,18 +28,18 @@ public class MainActivity extends AppCompatActivity {
         private final String TAG = "DogAsyncTask";
 
         @Override
+        protected boolean hasCache() {
+            return true;
+        }
+
+        @Override
+        protected Dog returnCache() {
+            return new Dog("zunjae", 4);
+        }
+
+        @Override
         public void onPreExecute() {
             Log.i(TAG, "Progressbar loaded");
-        }
-
-        @Override
-        public boolean hasCache() {
-            return DogRepository.hasDogSaved();
-        }
-
-        @Override
-        public Dog returnCache() {
-            return DogRepository.getDogFromRepo();
         }
 
         @Override

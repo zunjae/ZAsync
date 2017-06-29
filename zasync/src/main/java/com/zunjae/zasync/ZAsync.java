@@ -86,7 +86,9 @@ public abstract class ZAsync<Result> {
      *
      * @return a boolean which tells if we locally have cache available
      */
-    public abstract boolean hasCache();
+    protected boolean hasCache() {
+        return false;
+    }
 
     /**
      * This method will be called if hasCache() return true
@@ -94,7 +96,9 @@ public abstract class ZAsync<Result> {
      *
      * @return the results saved locally
      */
-    public abstract Result returnCache();
+    protected Result returnCache() {
+        return null;
+    }
 
     /**
      * Connect to the internet to load new data.
