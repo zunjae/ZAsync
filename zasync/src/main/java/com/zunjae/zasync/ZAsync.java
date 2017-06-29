@@ -1,8 +1,7 @@
 package com.zunjae.zasync;
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.annotation.NonNull;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -15,21 +14,10 @@ public abstract class ZAsync<Result> {
 
     private static final String TAG = "ZAsync";
 
-    // todo : figure out if context is required. Probably not.
-    @NonNull
-    private Context context;
-
     /**
      * Call cancel() in onDestroy to prevent memory leaks
      */
     private boolean cancelled = false;
-
-    public ZAsync(@NonNull Context context) {
-        if (context instanceof Activity) {
-            throw new IllegalArgumentException("Make sure you provide the App Context to prevent leaks");
-        }
-        this.context = context;
-    }
 
     /**
      * Used to display a loading indicator etc.
@@ -76,21 +64,39 @@ public abstract class ZAsync<Result> {
 
         onPreExecute();
 
-        // add some proper threading here... :')
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Result result;
+                if (hasCache()) {
+                    result = returnCache();
+                } else {
+                    result = doInBackground();
+                }
+                communicateBackToUIThread(result);
+            }
+        }).start();
+    }
 
-        Result result;
-        if (hasCache()) {
-            result = returnCache();
-        } else {
-            result = doInBackground();
-        }
-
+    /**
+     * Will be called after execute()
+     * If the activity was destroyed, then we should not push back data to prevent leaks
+     *
+     * @param result the results from either returnCache() or doInBackground()
+     */
+    private void communicateBackToUIThread(final Result result) {
         if (cancelled) {
-            Log.i(TAG, "[onPostExecute] Not continuing onPostExecute");
+            Log.i(TAG, "[communicateBackToUIThread] Not continuing due to cancel() being called");
             return;
         }
 
-        onPostExecute(result);
+        // communicate back to the main thread
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                onPostExecute(result);
+            }
+        });
     }
 
     @Override

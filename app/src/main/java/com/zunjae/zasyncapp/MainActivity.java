@@ -1,34 +1,35 @@
 package com.zunjae.zasyncapp;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.zunjae.zasync.Dog;
-import com.zunjae.zasync.DogRepository;
 import com.zunjae.zasync.ZAsync;
 
 public class MainActivity extends AppCompatActivity {
+
+    private DogAsyncTask asyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DogAsyncTask dogTest = new DogAsyncTask(getApplicationContext());
-        dogTest.execute();
+        asyncTask = new DogAsyncTask();
+        asyncTask.execute();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (asyncTask != null) {
+            asyncTask.cancel();
+        }
+    }
 
     private class DogAsyncTask extends ZAsync<Dog> {
         private static final String TAG = "DogAsyncTask";
-
-        public DogAsyncTask(@NonNull Context context) {
-            super(context);
-        }
 
         @Override
         public void onPreExecute() {
@@ -47,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Dog doInBackground() {
-            // simulate connecting to the cloud
-            return new Dog("Shitty library", 5);
+            return DogRepository.getMockDogFromCloud();
         }
 
         @Override

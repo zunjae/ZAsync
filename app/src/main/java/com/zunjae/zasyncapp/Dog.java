@@ -1,4 +1,4 @@
-package com.zunjae.zasync;
+package com.zunjae.zasyncapp;
 
 /**
  * Created by zunjae on 6/29/2017.
