@@ -29,7 +29,7 @@ protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main);
 
     asyncTask = new DogAsyncTask();
-    asyncTask.cancelOnActivityDestroyed(getApplication(), this);
+    asyncTask.cancelOnActivityDestroyed(this);
     asyncTask.execute();
 }
 
