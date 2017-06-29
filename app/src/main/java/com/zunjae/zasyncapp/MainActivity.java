@@ -4,32 +4,28 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.zunjae.zasync.ZAsync;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DogAsyncTask asyncTask;
+    private TextView helloWorld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        asyncTask = new DogAsyncTask();
+        helloWorld = (TextView) findViewById(R.id.helloWorld);
+
+        DogAsyncTask asyncTask = new DogAsyncTask();
+        asyncTask.cancelOnActivityDestroyed(getApplication(), this);
         asyncTask.execute();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (asyncTask != null) {
-            asyncTask.cancel();
-        }
-    }
-
     private class DogAsyncTask extends ZAsync<Dog> {
-        private static final String TAG = "DogAsyncTask";
+        private final String TAG = "DogAsyncTask";
 
         @Override
         public void onPreExecute() {
@@ -56,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Progressbar dismissed");
 
             if (dog != null) {
-                Log.i(TAG, "Loaded doggy with name " + dog.getName());
+                helloWorld.setText("Doggy found: " + dog.getName());
             } else {
-                Log.i(TAG, "Since the process failed, show retry button");
+                helloWorld.setText("Failed to load doggy");
             }
         }
     }

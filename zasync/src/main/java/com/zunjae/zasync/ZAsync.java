@@ -1,5 +1,8 @@
 package com.zunjae.zasync;
 
+import android.app.Activity;
+import android.app.Application;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
@@ -18,6 +21,56 @@ public abstract class ZAsync<Result> {
      * Call cancel() in onDestroy to prevent memory leaks
      */
     private boolean cancelled = false;
+
+    @Nullable
+    private Application.ActivityLifecycleCallbacks activityCallBackListener;
+
+    @Nullable
+    private Application application;
+
+    public void cancelOnActivityDestroyed(Application application, final Activity calledFromActivity) {
+        this.application = application;
+        activityCallBackListener = new Application.ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                // todo: check if there is a better way to compare classes
+                if (activity.getClass() == calledFromActivity.getClass()) {
+                    cancel();
+                }
+            }
+        };
+        application.registerActivityLifecycleCallbacks(activityCallBackListener);
+    }
 
     /**
      * Used to display a loading indicator etc.
@@ -50,6 +103,10 @@ public abstract class ZAsync<Result> {
 
     public void cancel() {
         this.cancelled = true;
+        // unregister onDestroy listener
+        if (application != null) {
+            application.unregisterActivityLifecycleCallbacks(activityCallBackListener);
+        }
     }
 
     /**
@@ -97,6 +154,11 @@ public abstract class ZAsync<Result> {
                 onPostExecute(result);
             }
         });
+
+        // unregister onDestroy listener
+        if (application != null) {
+            application.unregisterActivityLifecycleCallbacks(activityCallBackListener);
+        }
     }
 
     @Override
