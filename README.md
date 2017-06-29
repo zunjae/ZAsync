@@ -29,6 +29,7 @@ protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main);
 
     asyncTask = new DogAsyncTask();
+    asyncTask.cancelOnActivityDestroyed(getApplication(), this);
     asyncTask.execute();
 }
 
@@ -60,12 +61,6 @@ private class DogAsyncTask extends ZAsync<Dog> {
     public void onPostExecute(@Nullable Dog dog) {
         // dismiss notification
     }
-}
----
-@Override
-protected void onDestroy() {
-    super.onDestroy();
-    if (asyncTask != null) { asyncTask.cancel(); }
 }
 
 ```
