@@ -17,7 +17,7 @@ public class DogRepository {
 
     public static boolean hasDogSaved() {
         int randomNumber = new SecureRandom().nextInt(1000);
-        return randomNumber > 1;
+        return randomNumber > 250;
     }
 
     public static Dog getMockDogFromCloud() {
@@ -27,6 +27,6 @@ public class DogRepository {
             e.printStackTrace();
         }
         Log.i(TAG, "done with sleeping...");
-        return new Dog("Cloud boii", 4);
+        return new Dog("Cloud boii", 6);
     }
 }

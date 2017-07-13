@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected boolean hasCache() {
+            Log.i(TAG, "Checking if dog is saved in the database. " +
+                    "This should always be a lightweight task");
             return DogRepository.hasDogSaved();
         }
 
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPreExecute() {
-            Log.i(TAG, "Progressbar loaded");
+            Log.i(TAG, "Progressbar is now showing");
         }
 
         @Override
