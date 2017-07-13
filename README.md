@@ -74,13 +74,13 @@ private class DogAsyncTask extends ZAsync<Dog> {
 }
 ---
 
-    // optional cancel listener
-    @OnClick(R.id.cancelButton)
-    public void onCancelButtonClicked() {
-        if (asyncTask != null) {
-            asyncTask.cancel();
-        }
+// optional cancel listener
+@OnClick(R.id.cancelButton)
+public void onCancelButtonClicked() {
+    if (asyncTask != null) {
+        asyncTask.cancel();
     }
+}
 
 ```
 
