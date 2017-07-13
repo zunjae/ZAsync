@@ -149,11 +149,18 @@ public abstract class ZAsync<Result> {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Result result;
+                Result result;
                 if (forceSkipCache) {
                     result = doInBackground();
                 } else if (hasCache()) {
                     result = returnCache();
+                    if (result instanceof CachingLimit) {
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime > ((CachingLimit) result).getExpirationDate()) {
+                            Log.i(TAG, "Caching has expired, forcing doInBackground() now");
+                            result = doInBackground();
+                        }
+                    }
                 } else {
                     result = doInBackground();
                 }

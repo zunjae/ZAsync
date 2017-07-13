@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         helloWorld = (TextView) findViewById(R.id.helloWorld);
 
         DogAsyncTask asyncTask = new DogAsyncTask(this);
-        asyncTask.setForceSkipCache(true);
+        asyncTask.setForceSkipCache(false);
         asyncTask.execute();
     }
 
