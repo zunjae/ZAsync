@@ -2,6 +2,8 @@ package com.zunjae.zasyncapp;
 
 import android.util.Log;
 
+import com.zunjae.zasync.CacheTime;
+
 import java.security.SecureRandom;
 
 /**
@@ -27,6 +29,8 @@ public class DogRepository {
             e.printStackTrace();
         }
         Log.i(TAG, "done with sleeping...");
-        return new Dog("Cloud boii", 6);
+        Dog dog = new Dog("Cloud boii", 6);
+        dog.setExpirationDate(CacheTime.DAYS(7));
+        return dog;
     }
 }

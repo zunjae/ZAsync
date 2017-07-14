@@ -6,4 +6,6 @@ package com.zunjae.zasync;
 
 public interface CachingLimit {
     long getExpirationDate();
+
+    void setExpirationDate(long expirationDate);
 }
